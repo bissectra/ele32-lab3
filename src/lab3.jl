@@ -32,3 +32,13 @@ function bit_error_probability(H, p, max_iter)
 
 end
 end
+
+# Pontos a serem investigados
+# ◼ Qual é a relação entre desempenho e probabilidade de
+# erro de bit de informação?
+# ◼ Compare o desempenho do sistema LDPC com os
+# sistemas dos outros laboratórios.
+# ◼ Qual é a complexidade de decodificação? Ela depende
+# do valor de p?
+# ◼ Quais foram as dificuldades de se projetar o código
+# LDPC?
