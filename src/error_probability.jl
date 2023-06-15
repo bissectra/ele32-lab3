@@ -25,7 +25,11 @@ function compute_data()
     tol = 0.1
     conf = 0.1
 
-    data_bits_count(p) = round(Int, (1 - p) / p / tol^2 / conf)
+    function data_bits_count(p)
+        ans = round(Int, (1 - p) / p / tol^2 / conf)
+        println("data_bits_count($p) = $ans")
+        return ans
+    end
 
     probs = collect(logrange(0.00001, 0.1, 15))
     channels = [BinarySymmetricChannel(p) for p in probs]
