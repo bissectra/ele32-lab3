@@ -38,7 +38,7 @@ function compute_data()
     max_iter = 100
 
     ldpc_encoder, ldpc_decoder, ldpc_data_length = regular_ldpc(dv, dc, N, max_iter)
-    ldpc_data_bits_count(p) = 1_000_000 # FIXME: use Chebyshev's inequality to estimate this
+    ldpc_data_bits_count(p) = 10_000_000 # FIXME: use Chebyshev's inequality to estimate this
     get_ldpc_error_prob(channel) = estimate_error_probability(ldpc_encoder, channel, ldpc_decoder, ldpc_data_bits_count(channel.dist.p), ldpc_data_length)
     ldpc_bit_error_probs = get_ldpc_error_prob.(channels)
 
@@ -46,4 +46,9 @@ function compute_data()
 
     # save to csv
     CSV.write("data/error_probability.csv", df)
+end
+
+function get_data()
+    df = CSV.read("data/error_probability.csv", DataFrame)
+    return df
 end
