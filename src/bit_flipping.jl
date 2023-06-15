@@ -68,3 +68,40 @@ function build_parity_check_matrix(adjlist, radjlist)
 
     return H
 end
+
+function bit_flipping(adj, radj, received, max_iter)
+    N, dv = size(adj)
+    M, dc = size(radj)
+    @assert length(received) == N "received must have length N"
+
+    r = copy(received)
+
+    # initialize
+    x = zeros(Int, N)
+    y = zeros(Int, M)
+    for i in 1:max_iter
+        for c in 1:M
+            y[c] = mod(sum(r[radj[c, :]]), 2) # red numbers
+        end
+        for v in 1:N
+            x[v] = sum(y[adj[v, :]]) # green numbers
+        end
+
+        value, index = findmax(x)
+
+        if value == 0
+            break
+        end
+
+        r[index] = 1 - r[index]
+    end
+    return r
+end
+
+function decode(adj, radj, received, max_iter)
+    N, dv = size(adj)
+    M, dc = size(radj)
+    K = N - M
+    r = bit_flipping(adj, radj, received, max_iter)
+    return r[1:K]
+end
