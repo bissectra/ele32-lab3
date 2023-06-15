@@ -98,10 +98,38 @@ function bit_flipping(adj, radj, received, max_iter)
     return r
 end
 
-function decode(adj, radj, received, max_iter)
-    N, dv = size(adj)
-    M, dc = size(radj)
+function adjust_N(N, dv, dc)
+    u = gcd(dv, dc)
+    new_N = round(Int, N / (dc ÷ u)) * (dc ÷ u)
+    if new_N != N
+        println("N adjusted from $N to $new_N")
+    end
+    return new_N
+end
+
+function regular_ldpc(dv, dc, N, max_iter)
+    N = adjust_N(N, dv, dc)
+    M = N * dv ÷ dc
     K = N - M
-    r = bit_flipping(adj, radj, received, max_iter)
-    return r[1:K]
+    @assert N * dv == M * dc "N * dv must equal M * dc"
+
+    adj, radj = build_graph(dv, dc, N)
+
+    function encode(data)
+        @assert length(data) == K "data must have length K"
+
+        encoded = vcat(data, falses(M))
+        @assert length(encoded) == N "encoded must have length N"
+
+        return encoded
+    end
+
+    function decode(received)
+        @assert length(received) == N "received must have length N"
+        cleaned = bit_flipping(adj, radj, received, max_iter)
+        decoded = cleaned[1:K]
+        return decoded
+    end
+
+    return encode, decode
 end
