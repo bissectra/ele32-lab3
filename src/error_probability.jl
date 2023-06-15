@@ -22,12 +22,17 @@ end
 function compute_data()
     Random.seed!(0)
 
+    tol = 0.05
+    conf = 0.05
+
+    data_bits_count(p) = round(Int, (1 - p) / p / tol^2 / conf)
+
     probs = collect(logrange(0.00001, 0.1, 15))
     channels = [BinarySymmetricChannel(p) for p in probs]
 
     ## Hamming
     hamming_encoder, hamming_decoder, hamming_data_length = Hamming.encode, Hamming.decode, 4
-    hamming_data_bits_count(p) = 100_000 # FIXME: use Chebyshev's inequality to estimate this
+    hamming_data_bits_count = data_bits_count
     get_hamm_error_prob(channel) = estimate_error_probability(hamming_encoder, channel, hamming_decoder, hamming_data_bits_count(channel.dist.p), hamming_data_length)
     hamming_bit_error_probs = get_hamm_error_prob.(channels)
 
@@ -38,7 +43,7 @@ function compute_data()
     max_iter = 100
 
     ldpc_encoder, ldpc_decoder, ldpc_data_length = regular_ldpc(dv, dc, N, max_iter)
-    ldpc_data_bits_count(p) = 10_000_000 # FIXME: use Chebyshev's inequality to estimate this
+    ldpc_data_bits_count = data_bits_count
     get_ldpc_error_prob(channel) = estimate_error_probability(ldpc_encoder, channel, ldpc_decoder, ldpc_data_bits_count(channel.dist.p), ldpc_data_length)
     ldpc_bit_error_probs = get_ldpc_error_prob.(channels)
 
