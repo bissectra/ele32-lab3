@@ -19,7 +19,7 @@ function estimate_error_probability(encoder, channel, decoder, data_bits_count, 
     return wrong_bits_count / data_bits_count
 end
 
-function main()
+function compute_data()
     Random.seed!(0)
 
     probs = collect(logrange(0.00001, 0.1, 15))
@@ -38,7 +38,7 @@ function main()
     max_iter = 100
 
     ldpc_encoder, ldpc_decoder, ldpc_data_length = regular_ldpc(dv, dc, N, max_iter)
-    ldpc_data_bits_count(p) = 100_000 # FIXME: use Chebyshev's inequality to estimate this
+    ldpc_data_bits_count(p) = 1_000_000 # FIXME: use Chebyshev's inequality to estimate this
     get_ldpc_error_prob(channel) = estimate_error_probability(ldpc_encoder, channel, ldpc_decoder, ldpc_data_bits_count(channel.dist.p), ldpc_data_length)
     ldpc_bit_error_probs = get_ldpc_error_prob.(channels)
 
