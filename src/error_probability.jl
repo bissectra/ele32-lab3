@@ -9,7 +9,7 @@ function estimate_error_probability(encoder, channel, decoder, data_bits_count, 
     word_count = data_bits_count ÷ data_length
     wrong_bits_count = 0
     for _ in 1:word_count
-        data = falses(data_length)
+        data = falses(data_length) # leverage the simmetry of the channel
         transmitted = encoder(data)
         received = channel(transmitted)
         decoded = decoder(received)
