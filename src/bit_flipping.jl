@@ -1,5 +1,7 @@
 using Random
 
+include("./utils.jl")
+
 function select_combination(elements, k)
     n = length(elements)
     combination = elements[randperm(n)][1:k]
@@ -98,17 +100,8 @@ function bit_flipping(adj, radj, received, max_iter)
     return r
 end
 
-function adjust_N(N, dv, dc)
-    u = gcd(dv, dc)
-    new_N = round(Int, N / (dc ÷ u)) * (dc ÷ u)
-    if new_N != N
-        println("N adjusted from $N to $new_N")
-    end
-    return new_N
-end
-
 function regular_ldpc(dv, dc, N, max_iter)
-    N = adjust_N(N, dv, dc)
+    N = round_to_multiple(N, dc ÷ gcd(dv, dc))
     M = N * dv ÷ dc
     K = N - M
     @assert N * dv == M * dc "N * dv must equal M * dc"
@@ -131,5 +124,7 @@ function regular_ldpc(dv, dc, N, max_iter)
         return decoded
     end
 
-    return encode, decode
+    data_length = K
+
+    return encode, decode, data_length
 end
