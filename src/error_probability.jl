@@ -50,10 +50,10 @@ function compute_data()
     df = DataFrame(channel_prob=probs, hamming_bit_error_probs=hamming_bit_error_probs, ldpc_bit_error_probs=ldpc_bit_error_probs)
 
     # save to csv
-    CSV.write("data/error_probability.csv", df)
+    CSV.write("assets/error_probability.csv", df)
 end
 
 function get_data()
-    df = CSV.read("data/error_probability.csv", DataFrame)
+    df = CSV.read("assets/error_probability.csv", DataFrame)
     return df
 end
