@@ -1,6 +1,6 @@
 module LDPC
 
-transmission_rate(dv, dc) = dc / (dc + dv)
+transmission_rate(dv, dc) = (dc - dv) / dc
 
 # Gere um programa que seja capaz de projetar a matriz de verificação de
 # paridade para um código LDPC regular para valores arbitrários de dv, dc e N
@@ -14,7 +14,7 @@ end
 # mais próximo destes valores
 
 function hamming_like(N)
-
+    # 105, 203, 504, 1001
 end
 
 # Implemente um decodificador que, com base na matriz de verificação de
