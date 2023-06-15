@@ -22,8 +22,8 @@ end
 function compute_data()
     Random.seed!(0)
 
-    tol = 0.1
-    conf = 0.1
+    tol = 0.05
+    conf = 0.05
 
     function data_bits_count(p)
         ans = round(Int, (1 - p) / p / tol^2 / conf)
@@ -31,7 +31,7 @@ function compute_data()
         return ans
     end
 
-    probs = collect(logrange(0.00001, 0.1, 15))
+    probs = collect(logrange(0.00001, 0.1, 30))
     channels = [BinarySymmetricChannel(p) for p in probs]
 
     ## Hamming
