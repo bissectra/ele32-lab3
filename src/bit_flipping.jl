@@ -53,3 +53,18 @@ function build_graph(dv, dc, N)
 
     return adjlist, radjlist
 end
+
+function build_parity_check_matrix(adjlist, radjlist)
+    N, dv = size(adjlist)
+    M, dc = size(radjlist)
+
+    H = zeros(Int, M, N)
+
+    for v in 1:N
+        for c in adjlist[v, :]
+            H[c, v] = 1
+        end
+    end
+
+    return H
+end
