@@ -31,7 +31,7 @@ function compute_data()
         return ans
     end
 
-    probs = collect(logrange(0.00001, 0.1, 30))
+    probs = collect(logrange(0.00001, 0.1, 20))
     channels = [BinarySymmetricChannel(p) for p in probs]
 
     ## Hamming
