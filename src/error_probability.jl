@@ -22,8 +22,8 @@ end
 function compute_data()
     Random.seed!(0)
 
-    tol = 0.05
-    conf = 0.05
+    tol = 0.1
+    conf = 0.1
 
     data_bits_count(p) = round(Int, (1 - p) / p / tol^2 / conf)
 
