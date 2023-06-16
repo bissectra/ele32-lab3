@@ -43,15 +43,26 @@ function compute_data()
     ## LDPC
     dv = 3
     dc = 7
-    N = 1000
+    Ns = [100, 200, 500, 1000]
     max_iter = 100
 
-    ldpc_encoder, ldpc_decoder, ldpc_data_length = regular_ldpc(dv, dc, N, max_iter)
-    ldpc_data_bits_count = data_bits_count
-    get_ldpc_error_prob(channel) = estimate_error_probability(ldpc_encoder, channel, ldpc_decoder, ldpc_data_bits_count(channel.dist.p), ldpc_data_length)
-    ldpc_bit_error_probs = get_ldpc_error_prob.(channels)
+    ldpc_bit_error_probs_array = []
 
-    df = DataFrame(channel_prob=probs, hamming_bit_error_probs=hamming_bit_error_probs, ldpc_bit_error_probs=ldpc_bit_error_probs)
+    for N in Ns
+
+        ldpc_encoder, ldpc_decoder, ldpc_data_length = regular_ldpc(dv, dc, N, max_iter)
+        ldpc_data_bits_count = data_bits_count
+        get_ldpc_error_prob(channel) = estimate_error_probability(ldpc_encoder, channel, ldpc_decoder, ldpc_data_bits_count(channel.dist.p), ldpc_data_length)
+        ldpc_bit_error_probs = get_ldpc_error_prob.(channels)
+        push!(ldpc_bit_error_probs_array, ldpc_bit_error_probs)
+    end
+
+    df = DataFrame(channel_prob=probs,
+        hamming_bit_error_probs=hamming_bit_error_probs,
+        ldpc_bit_error_probs_100=ldpc_bit_error_probs_array[1],
+        ldpc_bit_error_probs_200=ldpc_bit_error_probs_array[2],
+        ldpc_bit_error_probs_500=ldpc_bit_error_probs_array[3],
+        ldpc_bit_error_probs_1000=ldpc_bit_error_probs_array[4])
 
     # save to csv
     CSV.write("assets/error_probability.csv", df)
